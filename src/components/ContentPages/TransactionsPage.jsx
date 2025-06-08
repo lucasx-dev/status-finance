@@ -64,7 +64,7 @@ export const TransactionsContent = () => {
     >
       <div>
         <div className="mb-5 text-[1rem] font-semibold">
-          <h1 className="text-white text-2xl font-bold mb-3">
+          <h1 className="text-white text-[2rem] font-bold mb-3">
             Histórico de Transações
           </h1>
           <p className="flex gap-2 items-center">
@@ -106,7 +106,7 @@ export const TransactionsContent = () => {
         </div>
         <div>
           <div
-            className="w-[60dvh] h-60 flex flex-col [&::-webkit-scrollbar]:[width:0.5rem]
+            className="w-[40dvh] h-60 flex flex-col [&::-webkit-scrollbar]:[width:0.5rem]
         [&::-webkit-scrollbar-thumb]:bg-blue-500
         overflow-y-auto "
           >
@@ -193,7 +193,7 @@ export const TransactionsContent = () => {
           </div>
           {transactions.length !== 0 && (
             <button
-              className="rounded-md items-center md:mt-0 mt-5 flex w-full border-blue-700 border-1 text-white  justify-center hover:scale-105 hover:bg-blue-800 "
+              className="rounded-md items-center md:mt-0 mt-5 flex w-[15rem] border-blue-700 border-1 text-white  justify-center hover:scale-105 hover:bg-blue-800 "
               onClick={handleButtonClick}
             >
               {pdfContent ? (

@@ -4,15 +4,17 @@ export const LoginContent = ({ LoginGoogle, logogoogle }) => {
   return (
     <div className="w-screen h-screen absolute flex flex-col justify-center items-center bg-black/80  text-white m-0 p-0">
       <div className=" justify-center font-bold items-center relative font-[Urbanist] flex text-center flex-col select-none">
-        <div className="flex">
-          <h1 className="text-5xl md:text-6xl p-2">FINANCE STATUS</h1>
+        <div className="flex w-full items-center justify-center">
+          <h1 className="text-5xl md:text-6xl p-2 w-50 md:w-100">
+            FINANCE STATUS
+          </h1>
           <div className="relative rounded-full justify-center items-center ">
             <FaCircle
-              className="text-blue-700 mr-30 fixed size-5 animate-ping
+              className="text-blue-700  fixed  size-5 animate-ping
            "
             />
             <FaCircle
-              className="text-blue-700 mr-30 fixed size-5
+              className="text-blue-700  fixed size-5
            "
             />
           </div>

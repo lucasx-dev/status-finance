@@ -20,7 +20,7 @@ export const NavBar = () => {
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden p-4 flex m-0 text-3xl text-white z-100"
+        className="md:hidden p-4 w-20 h-20 flex m-0 text-3xl text-white z-100"
       >
         {isOpen ? <IoClose /> : <GiHamburgerMenu />}
       </button>

@@ -49,7 +49,7 @@ export const ModalLogin = () => {
       </footer>
 
       {openModal && (
-        <div className="fixed inset-0 bg-transparent/90 flex items-center justify-center z-50">
+        <div className="fixed inset-0  bg-transparent/90 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-xl overflow-y-auto shadow-xl w-20vw h-[50dvh] ">
             <p className="text-gray-800 text-base whitespace-pre-line">
               {contents[openModal].text}

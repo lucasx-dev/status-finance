@@ -34,7 +34,7 @@ export const LineChartGraphic = ({
 
   return (
     <div>
-      <LineChart width={300} height={300} data={data}>
+      <LineChart width={250} height={300} data={data}>
         <Line type="monotone" dataKey="uv" stroke={stroke(transactionFilter)} />
         <CartesianGrid stroke="#ccc" />
         <XAxis dataKey="name" />
