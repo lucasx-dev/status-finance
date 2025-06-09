@@ -21,7 +21,7 @@ export const HomeContent = () => {
     AddOutput,
   } = useLogic();
   return (
-    <div className="justify-center mt-[10dvh] gap-10 md:gap-0 items-center flex flex-col md:mt-5 md:ml-30 md:flex-row">
+    <div className="justify-center mt-[10dvh] gap-10  md:gap-0 items-center flex flex-col md:mt-5 md:ml-30 md:flex-row">
       <div className="flex flex-col justify-center md:block items-center flex-1">
         <h1 className="text-white font-bold text-2xl ">Página Inicial</h1>
         <div className="w-[14rem] md:w-[23rem] border-2 items-center rounded-3xl gap-40 flex p-6 mt-7 border-blue-700">
@@ -89,7 +89,7 @@ export const HomeContent = () => {
           {erro && <h1 className="text-red-500">Digite um valor válido</h1>}
           <div className="items-center flex justify-center ">
             <button
-              className="rounded-md  bg-blue-700  text-white w-40 p-1 hover:scale-105 hover:bg-blue-800 "
+              className="rounded-md  bg-blue-700  text-white w-40 md:w-100 p-1 hover:scale-105 hover:bg-blue-800 "
               onClick={optionValue == "input" ? AddInput : AddOutput}
             >
               Adicionar

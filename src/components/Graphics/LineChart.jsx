@@ -33,14 +33,20 @@ export const LineChartGraphic = ({
   };
 
   return (
-    <div>
-      <LineChart width={250} height={300} data={data}>
-        <Line type="monotone" dataKey="uv" stroke={stroke(transactionFilter)} />
-        <CartesianGrid stroke="#ccc" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-      </LineChart>
+    <div className="w-full max-w-[400px] mx-auto">
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart width={300} height={300} data={data}>
+          <Line
+            type="monotone"
+            dataKey="uv"
+            stroke={stroke(transactionFilter)}
+          />
+          <CartesianGrid stroke="#ccc" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 };

@@ -60,11 +60,11 @@ export const TransactionsContent = () => {
   return (
     <div
       id="divToExport"
-      className="justify-center mt-[10dvh] gap-10 md:gap-0 items-center flex flex-col md:mt-5 md:ml-30 md:flex-row"
+      className="justify-center mt-[15dvh] gap-10 md:gap-0 items-center flex flex-col md:mt-5 md:ml-30 md:flex-row"
     >
       <div>
         <div className="mb-5 text-[1rem] font-semibold">
-          <h1 className="text-white text-[2rem] font-bold mb-3">
+          <h1 className="text-white  text-2xl font-bold mb-3">
             Histórico de Transações
           </h1>
           <p className="flex gap-2 items-center">
@@ -106,7 +106,7 @@ export const TransactionsContent = () => {
         </div>
         <div>
           <div
-            className="w-[40dvh] h-60 flex flex-col [&::-webkit-scrollbar]:[width:0.5rem]
+            className="w-full md:w-[50dvh] h-60 flex flex-col [&::-webkit-scrollbar]:[width:0.5rem]
         [&::-webkit-scrollbar-thumb]:bg-blue-500
         overflow-y-auto "
           >
@@ -211,12 +211,13 @@ export const TransactionsContent = () => {
         </div>
       </div>
       {sortedTransactions.length !== 0 && (
-        <div className="items-center flex justify-center md:block flex-col">
+        <div className="w-full flex flex-col mr-15 md:mr-0 md:ml-20 items-center md:block">
           <LineChartGraphic
             transactionFilter={transactionFilter}
             sortedTransactions={sortedTransactions}
             filterTransactions={filterTransactions}
           />
+
           <PieChartGraphic
             transactionFilter={transactionFilter}
             sortedTransactions={sortedTransactions}
