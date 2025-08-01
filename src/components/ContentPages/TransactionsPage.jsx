@@ -11,7 +11,7 @@ import { TransactionsPDF } from "../../documents/transactions/transactionsfile";
 import { useEffect, useState } from "react";
 import { LineChartGraphic } from "../Graphics/LineChart";
 import { PieChartGraphic } from "../Graphics/PieChart";
-
+import { NumericFormat } from "react-number-format";
 export const TransactionsContent = () => {
   const [modal, setModal] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
@@ -61,30 +61,53 @@ return (
       id="divToExport"
       className="container mx-auto p-4 md:p-8 bg-gray-950 text-white min-h-screen"
     >
-      <div className="flex flex-col-reverse lg:flex-row gap-10 lg:gap-16">
+      <div className="flex flex-col lg:flex-row-reverse  gap-10 lg:gap-16">
         {/* Lado Esquerdo: Histórico + Filtro + Transações */}
         <div className="w-full lg:w-2/5">
           <header className="mb-8">
             <h1 className="text-3xl font-bold tracking-tight">
               Histórico de Transações
             </h1>
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm font-semibold">
+            <div className="mt-4 grid grid-cols-1 sm:flex-col items-center justify-center gap-4 text-sm font-semibold">
               <p className="flex items-center gap-2 bg-gray-900 p-3 rounded-lg border border-green-700">
                 <FaArrowTrendUp className="text-green-500" />
                 <span>
-                  Entradas: R$ {totalEntradas.toFixed(2).replace(".", ",")}
+                  Entradas: R$
+                  <NumericFormat
+                   value={totalEntradas}
+                   displayType="text"
+                    housandSeparator="."
+                   decimalSeparator=","
+                   decimalScale={2}
+                   fixedDecimalScale
+                   />
                 </span>
               </p>
               <p className="flex items-center gap-2 bg-gray-900 p-3 rounded-lg border border-red-700">
                 <FaArrowTrendDown className="text-red-500" />
-                <span>
-                  Saídas: R$ {totalSaidas.toFixed(2).replace(".", ",")}
+                <span className="whitespace-nowrap">
+                  Saídas: R$ <NumericFormat
+                    value={totalSaidas}
+                    displayType="text"
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    decimalScale={2}
+                    fixedDecimalScale
+                  />
                 </span>
               </p>
               <p className="flex items-center gap-2 bg-gray-900 p-3 rounded-lg border border-blue-700">
                 <MdOutlineAccountBalanceWallet className="text-blue-500" />
                 <span>
-                  Saldo: R$ {newBalance.toFixed(2).replace(".", ",")}
+                  Saldo: R$
+                  <NumericFormat
+                    value={newBalance}
+                    displayType="text"
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    decimalScale={2}
+                    fixedDecimalScale
+                  />
                 </span>
               </p>
             </div>
@@ -135,7 +158,7 @@ return (
                       }`}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
                           <FaMoneyBillWave
                             className={`text-xl ${
                               t.type === "entrada"
@@ -153,13 +176,21 @@ return (
                           </div>
                         </div>
                         <span
-                          className={`text-lg font-bold ${
+                          className={`whitespace-nowrap text-[15px] md:text-lg font-bold ${
                             t.type === "entrada"
                               ? "text-green-400"
                               : "text-red-400"
                           }`}
                         >
-                          R$ {t.value.toFixed(2).replace(".", ",")}
+                        R${" "}
+                          <NumericFormat
+                          value={t.value}
+                          displayType="text"
+                          thousandSeparator="."
+                          decimalSeparator=","
+                          decimalScale={2}
+                          fixedDecimalScale
+                        />
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
@@ -197,7 +228,7 @@ return (
                 {pdfContent ? (
                   <PDFDownloadLink
                     document={<TransactionsPDF content={pdfContent} />}
-                    filename="transactions.pdf"
+                    fileName="transações.pdf"
                   >
                     {({ loading }) =>
                       loading ? "Gerando PDF..." : "Baixar Relatório em PDF"
@@ -211,31 +242,6 @@ return (
           )}
         </div>
 
-        {sortedTransactions.length !== 0 && (
-          <div className="lg:w-2/4 h-full flex flex-col gap-8">
-            <h2 className="text-2xl font-bold tracking-tight lg:hidden">
-              Análise Financeira
-            </h2>
-            <div className="p-6 bg-gray-900 rounded-xl shadow-lg">
-              <h3 className="text-lg font-semibold mb-4">Evolução do Saldo</h3>
-              <LineChartGraphic
-                transactionFilter={transactionFilter}
-                sortedTransactions={sortedTransactions}
-                filterTransactions={filterTransactions}
-              />
-            </div>
-            <div className="p-6 bg-gray-900 rounded-xl shadow-lg">
-              <h3 className="text-lg font-semibold mb-4">
-                Distribuição por Categoria
-              </h3>
-              <PieChartGraphic
-                transactionFilter={transactionFilter}
-                sortedTransactions={sortedTransactions}
-                filterTransactions={filterTransactions}
-              />
-            </div>
-          </div>
-        )}
         {modal && selectedTransaction && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
             <div className="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-sm border border-gray-700">
@@ -269,6 +275,33 @@ return (
             </div>
           </div>
         )}
+        
+    
+        {sortedTransactions.length !== 0 && (
+          <div className="lg:w-2/4 h-full flex flex-col gap-8">
+            <h2 className="text-2xl font-bold tracking-tight lg:hidden">
+              Análise Financeira
+            </h2>
+            <div className="p-6 bg-gray-900 rounded-xl shadow-lg">
+              <h3 className="text-lg font-semibold mb-4">Evolução do Saldo</h3>
+              <LineChartGraphic
+                transactionFilter={transactionFilter}
+                sortedTransactions={sortedTransactions}
+                filterTransactions={filterTransactions}
+              />
+            </div>
+            <div className="p-6 bg-gray-900 rounded-xl shadow-lg">
+              <h3 className="text-lg font-semibold mb-4">
+                Distribuição por Categoria
+              </h3>
+              <PieChartGraphic
+                transactionFilter={transactionFilter}
+                sortedTransactions={sortedTransactions}
+                filterTransactions={filterTransactions}
+              />
+            </div>
+          </div>
+              )}
       </div>
     </div>
   );

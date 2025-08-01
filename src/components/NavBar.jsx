@@ -23,7 +23,7 @@ export const NavBar = () => {
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden p-4 w-20 h-20 flex m-0 text-3xl text-white z-100"
+        className="md:hidden p-2 w-20vw h-[50px] flex m-0 text-3xl text-white z-100"
       >
         {isOpen ? <IoClose /> : <GiHamburgerMenu />}
       </button>
@@ -64,18 +64,6 @@ export const NavBar = () => {
               Transações
             </h1>
             </button>
-          <button>
-            <h1
-              onClick={() => navigate("/budgets")}
-              className={`flex items-center gap-5 leading-7 ${
-                location.pathname === "/budgets" ? "text-blue-300" : ""
-              }
-              )} hover:text-blue-300`}
-            >
-              <BiTransfer />
-              Meus Orçamentos
-            </h1>
-          </button>
         </div>
         <div className="items-end-safe  justify-center flex bottom-0">
           <button
@@ -87,7 +75,7 @@ export const NavBar = () => {
         </div>
       </div>
       { logOutButton && (
-          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black/80 bg flex items-center justify-center z-50 p-4">
                       <div className="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-sm border border-gray-700">
                         <p className="text-white text-lg mb-6 text-center">
                           Tem certeza que deseja sair?

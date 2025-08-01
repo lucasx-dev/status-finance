@@ -7,7 +7,7 @@ export const TransactionsPDF = ({ content }) => {
       <Page size="A4">
         <View style={{ padding: 20 }}>
           {lines.length > 0 ? (
-            lines.map((line, idx) => <Text key={idx}>{line}</Text>)
+            lines.map((line, idx) => <Text style={{ padding: 5 }} key={idx}>{line}</Text>)
           ) : (
             <Text>Nenhum conteúdo para exportar.</Text>
           )}

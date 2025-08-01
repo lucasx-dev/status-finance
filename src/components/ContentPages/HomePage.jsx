@@ -1,6 +1,7 @@
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useLogic } from "../../hooks/LogicContext";
 import { CurrencyInput } from "../Inputs/InputHomePage"
+import { NumericFormat } from "react-number-format";
 export const HomeContent = () => {
   const {
     newBalance,
@@ -24,16 +25,23 @@ export const HomeContent = () => {
     sortedTransactions,
   } = useLogic();
   return (
-    <div className="container mx-auto p-30 md:p-8 bg-gray-950 text-white min-h-screen">
-      <div className="flex flex-col justify-center md:block items-center flex-1">
+    <div className="container mx-auto p-4 md:p-8 bg-gray-950 text-white min-h-screen">
+      <div className="flex flex-col justify-center md:block  flex-1">
         <h1 className="text-3xl font-bold tracking-tight ">Página Inicial</h1>
-          <div className="w-[14rem] md:w-[23rem] border-2 items-center rounded-3xl gap-40 flex p-6 mt-7 border-blue-700">
+          <div className="w-[14rem] md:w-[23rem] border-2  rounded-3xl gap-40 flex p-6 mt-7 border-blue-700">
             <h1 className="text-white text-xl  font-semibold">
                   Saldo: R${" "}
-                  {isHidden ? "******" : newBalance.toFixed(2).replace(".", ",")}
+                  {isHidden ? "******" : (<NumericFormat
+                    value={newBalance}
+                    displayType="text"
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    decimalScale={2}
+                    fixedDecimalScale
+                  />)}
                 </h1>
                 <button
-                  className="text-white absolute ml-40 md:ml-60"
+                  className="text-white fixed ml-40 md:ml-60"
                   onClick={() => setIsHidden(!isHidden)}
                 >
                 {isHidden ? (
@@ -43,7 +51,7 @@ export const HomeContent = () => {
                 )}
                 </button>
           </div>
-              <div className="flex-col flex justify-center  md:w-[60dvh] items-center mt-5">
+              <div className="flex-col flex  md:w-[60dvh] mt-5">
                 <h1 className="text-xl font-semibold">Categoria</h1>
                   <select
                     className="text-white bg-gray-900/90 w-50 md:w-100 rounded-md outline-0 p-2"
@@ -83,17 +91,17 @@ export const HomeContent = () => {
                   handleOutputChange={handleOutputChange}
               ></CurrencyInput>
                   {error && <h1 className="text-red-500">Digite um valor válido</h1>}
-                  <div className="items-center flex justify-center ">
+            </div>
+                  <div className=" flex  ">
                   <button
-                        className="rounded-md  bg-blue-700  text-white w-40 md:w-100 p-1 hover:scale-105 hover:bg-blue-800 "
+                        className="rounded-md  bg-blue-700 text-white w-20 md:w-100 p-1 hover:scale-105 hover:bg-blue-800 "
                           onClick={optionValue == "input" ? AddInput : AddOutput}
                   >
                           Adicionar
                   </button>
                 </div>
-            </div>
           <footer className="mt-10 text-[10px] text-white/20">
-          <p>Finance Status 2025 | Plataforma para controle financeiro</p>
+          <p>Finance Status 2025 </p>
           <p>Developed by Lucas Albuquerque</p>
           </footer>
         </div>
