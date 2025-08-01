@@ -67,11 +67,11 @@ export const TransactionsContent = () => {
           <h1 className="text-white  text-2xl font-bold mb-3">
             Histórico de Transações
           </h1>
-          <p className="flex gap-2 items-center">
+          <p className="flex gap-2 fixed items-center">
             <FaArrowTrendUp className="text-green-800" /> Tot. Entradas: R${" "}
             {totalEntradas.toFixed(2).replace(".", ",")}
           </p>
-          <p className="flex gap-2 items-center">
+          <p className="flex gap-2 fixed items-center">
             {" "}
             <FaArrowTrendDown className="text-red-800" />
             Tot. Saídas: R$ {totalSaidas.toFixed(2).replace(".", ",")}

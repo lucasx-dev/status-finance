@@ -15,7 +15,7 @@ export const Login = () => {
         <div>
           <video
             src={videoBg}
-            className="w-screen h-screen absolute flex saturate-0 blur-xl  object-cover"
+            className="w-screen h-screen absolute flex saturate-0 object-cover"
             autoPlay
             loop
             muted

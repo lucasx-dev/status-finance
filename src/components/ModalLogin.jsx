@@ -49,18 +49,18 @@ export const ModalLogin = () => {
       </footer>
 
       {openModal && (
-        <div className="fixed inset-0  bg-transparent/90 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl overflow-y-auto shadow-xl w-20vw h-[50dvh] ">
+        <div className="fixed inset-0 pointer-events-none bg-transparent/90 flex  items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-xl pointer-events-auto overflow-y-auto shadow-xl w-[50vw] h-[50dvh] ">
             <p className="text-gray-800 text-base whitespace-pre-line">
               {contents[openModal].text}
             </p>
+          </div>
             <button
               onClick={() => setOpenModal(null)}
-              className="fixed top-2 right-2 text-red-500 hover:text-red-900 text-2xl"
+              className="absolute top-20 right-45 flex pointer-events-auto text-red-500 hover:text-red-900 text-2xl"
             >
-              <IoCloseCircleSharp className="size-7" />
+              <IoCloseCircleSharp className="size-10" />
             </button>
-          </div>
         </div>
       )}
     </>

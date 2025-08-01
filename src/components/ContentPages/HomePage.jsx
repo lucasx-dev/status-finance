@@ -30,7 +30,7 @@ export const HomeContent = () => {
             {isHidden ? "******" : newBalance.toFixed(2).replace(".", ",")}
           </h1>
           <button
-            className="text-white fixed ml-40 md:ml-60"
+            className="text-white absolute ml-40 md:ml-60"
             onClick={() => setIsHidden(!isHidden)}
           >
             {isHidden ? (
