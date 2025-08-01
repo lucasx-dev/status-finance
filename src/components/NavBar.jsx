@@ -15,7 +15,10 @@ export const NavBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-
+  const [logOutButton, setLogOutButton] = useState(false)
+   const toggleLogOut = () => {
+    setLogOutButton(false);
+  };
   return (
     <>
       <button
@@ -60,17 +63,55 @@ export const NavBar = () => {
               <BiTransfer />
               Transações
             </h1>
+            </button>
+          <button>
+            <h1
+              onClick={() => navigate("/budgets")}
+              className={`flex items-center gap-5 leading-7 ${
+                location.pathname === "/budgets" ? "text-blue-300" : ""
+              }
+              )} hover:text-blue-300`}
+            >
+              <BiTransfer />
+              Meus Orçamentos
+            </h1>
           </button>
         </div>
         <div className="items-end-safe  justify-center flex bottom-0">
           <button
-            onClick={logOut}
+          onClick={setLogOutButton}
             className="flex gap-4 mt-50 mb:mt-0 text-xl hover:text-white hover:bg-blue-500 bg-white text-black transition-colors items-end p-3 rounded-4xl"
           >
             Sair <IoExitOutline className="size-7 text-xl" />
           </button>
         </div>
       </div>
+      { logOutButton && (
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+                      <div className="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-sm border border-gray-700">
+                        <p className="text-white text-lg mb-6 text-center">
+                          Tem certeza que deseja sair?
+                        </p>
+                        <div className="flex flex-col gap-4">
+                          <button
+                            onClick={logOut}
+                            className="bg-blue-600 hover:bg-blue-700 text-white w-full p-3 rounded-lg flex items-center justify-center text-lg font-semibold transition"
+                          >
+                            Sim
+                          </button>
+                          <button
+                          onClick={toggleLogOut}
+                            className="bg-red-600 hover:bg-red-700 text-white w-full p-3 rounded-lg text-lg font-semibold transition"
+                          >
+                            Não
+                          </button>
+                        <p className="text-white text-[10px] text-center">
+                          Não se preocupe, seus dados ficarão salvos.
+                        </p>
+                        </div>
+                      </div>
+                    </div>
+          )}
     </>
   );
 };

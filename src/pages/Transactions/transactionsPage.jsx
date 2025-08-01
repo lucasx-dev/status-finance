@@ -3,9 +3,11 @@ import { TransactionsContent } from "../../components/ContentPages/TransactionsP
 
 export const Transactions = () => {
   return (
-    <div className=" text-zinc-50 from-zinc-900 w-screen select-none h-screen bg-linear-to-bl to-zinc-950 flex">
+    <div className="flex w-full h-screen bg-gray-950 h-screenbg-gradient-to-bl text-zinc-50 select-none overflow-hidden">
       <NavBar />
-      <TransactionsContent />
+      <div className="flex-1 overflow-y-auto">
+        <TransactionsContent />
+      </div>
     </div>
   );
-}
+};
