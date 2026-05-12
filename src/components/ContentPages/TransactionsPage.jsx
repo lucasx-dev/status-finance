@@ -1,308 +1,403 @@
 import { FaMoneyBillWave } from "react-icons/fa";
 import { useLogic } from "../../hooks/LogicContext";
 import {
-  MdDeleteOutline,
-  MdOutlineAccountBalanceWallet,
-  MdOutlineDeleteOutline,
+	MdDeleteOutline,
+	MdOutlineAccountBalanceWallet,
+	MdOutlineDeleteOutline,
 } from "react-icons/md";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { FaArrowTrendDown, FaArrowTrendUp } from "react-icons/fa6";
 import { TransactionsPDF } from "../../documents/transactions/transactionsfile";
 import { useEffect, useState } from "react";
-import { LineChartGraphic } from "../Graphics/LineChart";
-import { PieChartGraphic } from "../Graphics/PieChart";
+import { ChartPieSimple } from "../Graphics/PieChart";
 import { NumericFormat } from "react-number-format";
+import { ChartLineDefault } from "../Graphics/LineChart";
+
 export const TransactionsContent = () => {
-  const [modal, setModal] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState(null);
-  const [transactionFilter, setTransactionFilter] = useState("todas");
-  const [pdfContent, setPdfContent] = useState("");
-  const {
-    excluirTransacaoFirestore,
-    newBalance,
-    totalEntradas,
-    totalSaidas,
-    transactions,
-    filterTransactions,
-    color,
-    categoryIcon,
-  } = useLogic();
+	const [modal, setModal] = useState(false);
+	const [selectedTransaction, setSelectedTransaction] = useState(null);
+	const [transactionFilter, setTransactionFilter] = useState("todas");
+	const [transactionFilterPeriodic, setTransactionFilterPeriodic] =
+		useState("Todos");
+	const [pdfContent, setPdfContent] = useState("");
+	const {
+		excluirTransacaoFirestore,
+		newBalance,
+		totalEntradas,
+		totalSaidas,
+		transactions,
+		filterTransactions,
+		filterPeriodic,
+	} = useLogic();
 
-  const sortedTransactions = transactions.sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
-  );
+	const sortedTransactions = transactions.sort(
+		(a, b) => new Date(a.date) - new Date(b.date),
+	);
 
-  useEffect(() => {
-    setPdfContent("");
-  }, [transactionFilter]);
+	useEffect(() => {
+		setPdfContent("");
+	}, [transactionFilter, transactionFilterPeriodic]);
 
-  const handleButtonClick = () => {
-    const contentfilter = transactions
-      .slice()
-      .reverse()
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .filter((t) =>
-        filterTransactions(t, transactionFilter, sortedTransactions)
-      )
-      .map(
-        (t) =>
-          `${t.type === "entrada" ? "Entrada" : "Saída"}: R$${t.value
-            .toFixed(2)
-            .replace(".", ",")} - ${t.category} - Data: ${t.date}`
-      )
-      .join("\n");
+	const handleButtonClick = () => {
+		const contentfilter = transactions
+			.slice()
+			.reverse()
+			.sort((a, b) => new Date(b.date) - new Date(a.date))
+			.filter(
+				(t) =>
+					filterTransactions(t, transactionFilter, sortedTransactions) &&
+					filterPeriodic(t, transactionFilterPeriodic),
+			)
+			.map(
+				(t) =>
+					`${t.type === "entrada" ? "Entrada" : "Saída"}: R$${t.value
+						.toFixed(2)
+						.replace(
+							".",
+							",",
+						)} - ${t.category} - Data: ${t.date.toLocaleString()}`,
+			)
+			.join("\n");
 
-    const content = `Histórico de Transações\n\n${contentfilter}`;
-    setPdfContent(content);
-  };
+		const content = `Histórico de Transações\n\n${contentfilter}`;
+		setPdfContent(content);
+	};
 
-return (
-    <div
-      id="divToExport"
-      className="container mx-auto p-4 md:p-8 bg-gray-950 text-white min-h-screen"
-    >
-      <div className="flex flex-col lg:flex-row-reverse  gap-10 lg:gap-16">
-        {/* Lado Esquerdo: Histórico + Filtro + Transações */}
-        <div className="w-full lg:w-2/5">
-          <header className="mb-8">
-            <h1 className="text-3xl font-bold tracking-tight">
-              Histórico de Transações
-            </h1>
-            <div className="mt-4 grid grid-cols-1 sm:flex-col items-center justify-center gap-4 text-sm font-semibold">
-              <p className="flex items-center gap-2 bg-gray-900 p-3 rounded-lg border border-green-700">
-                <FaArrowTrendUp className="text-green-500" />
-                <span>
-                  Entradas: R$
-                  <NumericFormat
-                   value={totalEntradas}
-                   displayType="text"
-                    housandSeparator="."
-                   decimalSeparator=","
-                   decimalScale={2}
-                   fixedDecimalScale
-                   />
-                </span>
-              </p>
-              <p className="flex items-center gap-2 bg-gray-900 p-3 rounded-lg border border-red-700">
-                <FaArrowTrendDown className="text-red-500" />
-                <span className="whitespace-nowrap">
-                  Saídas: R$ <NumericFormat
-                    value={totalSaidas}
-                    displayType="text"
-                    thousandSeparator="."
-                    decimalSeparator=","
-                    decimalScale={2}
-                    fixedDecimalScale
-                  />
-                </span>
-              </p>
-              <p className="flex items-center gap-2 bg-gray-900 p-3 rounded-lg border border-blue-700">
-                <MdOutlineAccountBalanceWallet className="text-blue-500" />
-                <span>
-                  Saldo: R$
-                  <NumericFormat
-                    value={newBalance}
-                    displayType="text"
-                    thousandSeparator="."
-                    decimalSeparator=","
-                    decimalScale={2}
-                    fixedDecimalScale
-                  />
-                </span>
-              </p>
-            </div>
-          </header>
+	return (
+		<div className="min-h-screen bg-[#0F172A] text-white">
+			<div className="mx-auto max-w-7xl px-5 py-8">
+				<header className="mb-8">
+					<h1 className="text-2xl font-semibold tracking-tight">Transações</h1>
 
-          <section className="mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Transações</h2>
-              <select
-                onChange={(e) => setTransactionFilter(e.target.value)}
-                value={transactionFilter}
-                className="bg-gray-800 text-white p-2 rounded-md border border-gray-700 focus:outline-none focus:border-blue-500"
-              >
-                <option value="todas">Todas</option>
-                <option value="Outros">Outros</option>
-                <option value="Alimentação">Alimentação</option>
-                <option value="Transporte">Transporte</option>
-                <option value="Saúde">Saúde</option>
-                <option value="Educação">Educação</option>
-                <option value="Lazer">Lazer</option>
-                <option value="Contas Fixas">Contas fixas</option>
-                <option value="entradas">Entradas</option>
-                <option value="saidas">Saídas</option>
-                <option value="antigas">Mais Antigas</option>
-              </select>
-            </div>
+					<p className="mt-1 text-sm text-slate-400">
+						Acompanhe seu histórico financeiro.
+					</p>
+				</header>
 
-            <div className="max-h-96 overflow-y-auto pr-2 space-y-4 [&::-webkit-scrollbar]:[width:0.5rem]
-        [&::-webkit-scrollbar-thumb]:bg-gray-900">
-              {transactions.length === 0 ? (
-                <p className="text-gray-400 text-center py-10">
-                  Nenhuma transação registrada.
-                </p>
-              ) : (
-                transactions
-                  .slice()
-                  .reverse()
-                  .filter((t) =>
-                    filterTransactions(t, transactionFilter, sortedTransactions)
-                  )
-                  .map((t, index) => (
-                    <div
-                      key={index}
-                      className={`p-4 rounded-xl shadow-lg transition-all transform hover:scale-[1.02] cursor-pointer border-l-4 ${
-                        t.type === "entrada"
-                          ? "border-green-500 bg-gray-800 hover:bg-gray-700"
-                          : "border-red-500 bg-gray-800 hover:bg-gray-700"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <FaMoneyBillWave
-                            className={`text-xl ${
-                              t.type === "entrada"
-                                ? "text-green-400"
-                                : "text-red-400"
-                            }`}
-                          />
-                          <div>
-                            <p className="text-lg font-bold">
-                              {t.type === "entrada" ? "Entrada" : "Saída"}
-                            </p>
-                            <p className="text-sm text-gray-400">
-                              Data: {t.date}
-                            </p>
-                          </div>
-                        </div>
-                        <span
-                          className={`whitespace-nowrap text-[15px] md:text-lg font-bold ${
-                            t.type === "entrada"
-                              ? "text-green-400"
-                              : "text-red-400"
-                          }`}
-                        >
-                        R${" "}
-                          <NumericFormat
-                          value={t.value}
-                          displayType="text"
-                          thousandSeparator="."
-                          decimalSeparator=","
-                          decimalScale={2}
-                          fixedDecimalScale
-                        />
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <p
-                          className={`text-xs px-2 py-1 rounded-full font-semibold ${color(
-                            t
-                          )} bg-gray-900/50 flex items-center gap-1`}
-                        >
-                          {categoryIcon(t)}
-                          {t.category}
-                        </p>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedTransaction(t);
-                            setModal(true);
-                          }}
-                          className="text-gray-400 hover:text-red-500 transition"
-                          title="Excluir Transação"
-                        >
-                          <MdDeleteOutline className="text-xl" />
-                        </button>
-                      </div>
-                    </div>
-                  ))
-              )}
-            </div>
-          </section>
-          {transactions.length !== 0 && (
-            <div className="mt-8">
-              <button
-                className="w-full text-center p-3 border border-blue-700 text-white rounded-md hover:bg-blue-800 transition font-semibold"
-                onClick={handleButtonClick}
-              >
-                {pdfContent ? (
-                  <PDFDownloadLink
-                    document={<TransactionsPDF content={pdfContent} />}
-                    fileName="transações.pdf"
-                  >
-                    {({ loading }) =>
-                      loading ? "Gerando PDF..." : "Baixar Relatório em PDF"
-                    }
-                  </PDFDownloadLink>
-                ) : (
-                  "Gerar Relatório em PDF"
-                )}
-              </button>
-            </div>
-          )}
-        </div>
+				<div className="grid gap-6 xl:grid-cols-[420px,1fr]">
+					<div className="space-y-5">
+						<div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
+							<div className="rounded-3xl border border-slate-800 bg-slate-900 p-4">
+								<div className="flex items-center gap-3">
+									<div className="rounded-xl bg-emerald-500/10 p-2">
+										<FaArrowTrendUp className="text-emerald-400" />
+									</div>
 
-        {modal && selectedTransaction && (
-          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-sm border border-gray-700">
-              <p className="text-white text-lg mb-6 text-center">
-                Tem certeza que deseja excluir esta transação?
-              </p>
-              <div className="flex flex-col gap-4">
-                <button
-                  onClick={async () => {
-                    await excluirTransacaoFirestore(selectedTransaction);
-                    setModal(false);
-                    setSelectedTransaction(null);
-                  }}
-                  className="bg-blue-600 hover:bg-blue-700 text-white w-full p-3 rounded-lg flex items-center justify-center text-lg font-semibold transition"
-                >
-                  Sim <MdOutlineDeleteOutline className="ml-2 text-xl" />
-                </button>
-                <button
-                  onClick={() => {
-                    setModal(false);
-                    setSelectedTransaction(null);
-                  }}
-                  className="bg-red-600 hover:bg-red-700 text-white w-full p-3 rounded-lg text-lg font-semibold transition"
-                >
-                  Não
-                </button>
-              <p className="text-white text-[10px] text-center">
-                Esta ação é irreversível e causará alteração no saldo atual.
-              </p>
-              </div>
-            </div>
-          </div>
-        )}
-        
-    
-        {sortedTransactions.length !== 0 && (
-          <div className="lg:w-2/4 h-full flex flex-col gap-8">
-            <h2 className="text-2xl font-bold tracking-tight lg:hidden">
-              Análise Financeira
-            </h2>
-            <div className="p-6 bg-gray-900 rounded-xl shadow-lg">
-              <h3 className="text-lg font-semibold mb-4">Evolução do Saldo</h3>
-              <LineChartGraphic
-                transactionFilter={transactionFilter}
-                sortedTransactions={sortedTransactions}
-                filterTransactions={filterTransactions}
-              />
-            </div>
-            <div className="p-6 bg-gray-900 rounded-xl shadow-lg">
-              <h3 className="text-lg font-semibold mb-4">
-                Distribuição por Categoria
-              </h3>
-              <PieChartGraphic
-                transactionFilter={transactionFilter}
-                sortedTransactions={sortedTransactions}
-                filterTransactions={filterTransactions}
-              />
-            </div>
-          </div>
-              )}
-      </div>
-    </div>
-  );
+									<div>
+										<p className="text-xs text-slate-500">Entradas</p>
+
+										<p className="text-lg font-semibold text-emerald-400">
+											R$
+											<NumericFormat
+												value={totalEntradas}
+												displayType="text"
+												thousandSeparator="."
+												decimalSeparator=","
+												decimalScale={2}
+												fixedDecimalScale
+											/>
+										</p>
+									</div>
+								</div>
+							</div>
+
+							<div className="rounded-3xl border border-slate-800 bg-slate-900 p-4">
+								<div className="flex items-center gap-3">
+									<div className="rounded-xl bg-red-500/10 p-2">
+										<FaArrowTrendDown className="text-red-400" />
+									</div>
+
+									<div>
+										<p className="text-xs text-slate-500">Saídas</p>
+
+										<p className="text-lg font-semibold text-red-400">
+											R$
+											<NumericFormat
+												value={totalSaidas}
+												displayType="text"
+												thousandSeparator="."
+												decimalSeparator=","
+												decimalScale={2}
+												fixedDecimalScale
+											/>
+										</p>
+									</div>
+								</div>
+							</div>
+
+							<div className="rounded-3xl border border-slate-800 bg-slate-900 p-4">
+								<div className="flex items-center gap-3">
+									<div className="rounded-xl bg-blue-500/10 p-2">
+										<MdOutlineAccountBalanceWallet className="text-blue-400" />
+									</div>
+
+									<div>
+										<p className="text-xs text-slate-500">Saldo</p>
+
+										<p className="text-lg font-semibold text-white">
+											R$
+											<NumericFormat
+												value={newBalance}
+												displayType="text"
+												thousandSeparator="."
+												decimalSeparator=","
+												decimalScale={2}
+												fixedDecimalScale
+											/>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<section className="rounded-3xl border border-slate-800 bg-slate-900 p-5">
+							<div className="mb-5 flex items-center justify-between ">
+								<div>
+									<h2 className="text-lg font-medium">Histórico</h2>
+
+									<p className="text-sm text-slate-500">
+										Movimentações registradas.
+									</p>
+								</div>
+
+								<div className="flex gap-5">
+									<select
+										onChange={(e) => setTransactionFilter(e.target.value)}
+										value={transactionFilter}
+										className="
+								h-10 rounded-xl border
+								border-slate-700
+								bg-slate-800 px-3
+								text-sm outline-none
+							"
+									>
+										<option value="todas">Todas</option>
+										<option value="Outros">Outros</option>
+										<option value="Alimentação">Alimentação</option>
+										<option value="Transporte">Transporte</option>
+										<option value="Saúde">Saúde</option>
+										<option value="Educação">Educação</option>
+										<option value="Lazer">Lazer</option>
+										<option value="Contas Fixas">Contas fixas</option>
+										<option value="entradas">Entradas</option>
+										<option value="saidas">Saídas</option>
+									</select>
+
+									<select
+										onChange={(e) =>
+											setTransactionFilterPeriodic(e.target.value)
+										}
+										value={transactionFilterPeriodic}
+										className=" h-10 rounded-xl borde border-slate-700
+										bg-slate-800 px-3 text-sm outline-none m-0
+										"
+									>
+										<option value="Todos">Todos os meses</option>
+										<option value="Janeiro">Janeiro</option>
+										<option value="Fevereiro">Fevereiro</option>
+										<option value="Maio">Maio</option>
+										<option value="Marco">Março</option>
+										<option value="Abril">Abril</option>
+										<option value="Maio">Maio</option>
+										<option value="Junho">Junho</option>
+										<option value="Julho">Julho</option>
+										<option value="Agosto">Agosto</option>
+										<option value="Setembro">Setembro</option>
+										<option value="Outubro">Outubro</option>
+										<option value="Novembro">Novembro</option>
+										<option value="Dezembro">Dezembro</option>
+									</select>
+								</div>
+							</div>
+
+							<div className="max-h-[420px] space-y-3 overflow-y-auto pr-1">
+								{transactions.length === 0 ? (
+									<div className="py-12 text-center text-sm text-slate-500">
+										Nenhuma transação registrada.
+									</div>
+								) : (
+									transactions
+										.slice()
+										.reverse()
+										.filter(
+											(t) =>
+												filterTransactions(
+													t,
+													transactionFilter,
+													sortedTransactions,
+												) && filterPeriodic(t, transactionFilterPeriodic),
+										)
+										.map((t, index) => (
+											<div
+												key={index}
+												className="
+											flex items-center
+											justify-between
+											rounded-2xl
+											border border-slate-800
+											bg-slate-800/50
+											p-4 transition
+											hover:bg-slate-800
+										"
+											>
+												<div className="flex items-center gap-3">
+													<div
+														className={`
+													flex h-10 w-10
+													items-center justify-center
+													rounded-xl
+													${
+														t.type === "entrada"
+															? "bg-emerald-500/10 text-emerald-400"
+															: "bg-red-500/10 text-red-400"
+													}
+												`}
+													>
+														<FaMoneyBillWave />
+													</div>
+
+													<div>
+														<p className="text-sm font-medium">{t.category}</p>
+
+														<p className="text-xs text-slate-500">
+															{new Date(t.date).toLocaleString("pt-BR")}
+														</p>
+													</div>
+												</div>
+
+												<div className="flex items-center gap-4">
+													<p
+														className={`text-sm font-semibold ${
+															t.type === "entrada"
+																? "text-emerald-400"
+																: "text-red-400"
+														}`}
+													>
+														R$
+														<NumericFormat
+															value={t.value}
+															displayType="text"
+															thousandSeparator="."
+															decimalSeparator=","
+															decimalScale={2}
+															fixedDecimalScale
+														/>
+													</p>
+
+													<button
+														onClick={() => {
+															setSelectedTransaction(t);
+															setModal(true);
+														}}
+														className="
+													text-slate-500
+													transition
+													hover:text-red-400
+												"
+													>
+														<MdDeleteOutline className="text-xl" />
+													</button>
+												</div>
+											</div>
+										))
+								)}
+							</div>
+
+							{transactions.length !== 0 && (
+								<button
+									onClick={handleButtonClick}
+									className="
+								mt-5 h-11 w-full
+								rounded-xl border
+								border-slate-700
+								bg-slate-800 text-sm
+								font-medium transition
+								hover:bg-slate-700
+							"
+								>
+									{pdfContent ? (
+										<PDFDownloadLink
+											document={<TransactionsPDF content={pdfContent} />}
+											fileName="transacoes.pdf"
+										>
+											Baixar relatório PDF
+										</PDFDownloadLink>
+									) : (
+										"Gerar relatório PDF"
+									)}
+								</button>
+							)}
+						</section>
+					</div>
+
+					{sortedTransactions.length !== 0 && (
+						<div className="space-y-5">
+							<div className="rounded-3xl border border-slate-800 bg-slate-900 p-5">
+								<h3 className="mb-4 text-lg font-medium">Evolução do saldo</h3>
+
+								<ChartLineDefault
+									transactionFilter={transactionFilter}
+									sortedTransactions={sortedTransactions}
+									filterTransactions={filterTransactions}
+									filterPeriodic={filterPeriodic}
+									transactionFilterPeriodic={transactionFilterPeriodic}
+								/>
+							</div>
+
+							<div className="rounded-3xl border border-slate-800 bg-slate-900 p-5">
+								<h3 className="mb-4 text-lg font-medium">
+									Distribuição por categoria
+								</h3>
+
+								<ChartPieSimple
+									transactionFilter={transactionFilter}
+									sortedTransactions={sortedTransactions}
+									filterTransactions={filterTransactions}
+									filterPeriodic={filterPeriodic}
+									transactionFilterPeriodic={transactionFilterPeriodic}
+								/>
+							</div>
+						</div>
+					)}
+				</div>
+
+				{modal && selectedTransaction && (
+					<div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+						<div className="w-full max-w-sm rounded-[28px] border border-slate-800 bg-slate-900 p-6">
+							<h2 className="text-lg font-semibold">Excluir transação?</h2>
+
+							<p className="mt-2 text-sm leading-6 text-slate-400">
+								Esta ação é irreversível e alterará seu saldo atual.
+							</p>
+
+							<div className="mt-6 flex gap-3">
+								<button
+									onClick={() => {
+										setModal(false);
+										setSelectedTransaction(null);
+									}}
+									className="h-11 flex-1 rounded-xl bg-slate-800 text-sm hover:bg-slate-700"
+								>
+									Cancelar
+								</button>
+
+								<button
+									onClick={async () => {
+										await excluirTransacaoFirestore(selectedTransaction);
+
+										setModal(false);
+										setSelectedTransaction(null);
+									}}
+									className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-red-500 text-sm font-medium hover:bg-red-600"
+								>
+									Excluir
+									<MdOutlineDeleteOutline />
+								</button>
+							</div>
+						</div>
+					</div>
+				)}
+			</div>
+		</div>
+	);
 };

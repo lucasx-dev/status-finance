@@ -1,88 +1,106 @@
 # 💰 Finance Status
 
-Um dashboard financeiro interativo e moderno, desenvolvido com **React + TailwindCSS**, que permite acompanhar de forma visual e prática todas as suas entradas, saídas e saldo em tempo real.
+Um dashboard financeiro pessoal, moderno e interativo — desenvolvido com **React + TailwindCSS + Firebase**. Acompanhe entradas, saídas, saldo e gráficos em tempo real, com dados isolados por conta Google.
 
+🔗 [Acesse o projeto ao vivo](https://finance-status.vercel.app/)
+
+![Finance Status Preview](image.png)
+
+---
 
 ## ✨ Funcionalidades
 
-- Visualização de saldo atual (entradas, saídas e total)  
-- Cadastro de transações financeiras (entrada e saída)  
-- Exclusão de transações com atualização imediata do saldo  
-- Gráfico dinâmico com evolução das entradas e saídas (via Recharts)  
-- Lista completa de transações com scroll customizado  
-- Filtro de transações por tipo (Entrada/Saída/Todas/Outros/Alimentação/  
-  Transporte/Saúde/Educação/Lazer/Contas fixas/Mais Antigas)
+- Autenticação com Google (cada usuário vê apenas seus próprios dados)
+- Foto de perfil vinculada à conta Google exibida na navegação
+- Cadastro de transações por categoria (Alimentação, Transporte, Saúde, Educação, Lazer, Contas Fixas, Outros)
+- Visualização de saldo, total de entradas e total de saídas
+- Exclusão de transações com atualização imediata do saldo
+- Filtro por tipo (Entradas / Saídas / Todas / por Categoria / Mais Antigas)
+- **Filtro por mês** — exibe apenas transações do mês selecionado
+- **Filtros combinados** — categoria + período aplicados simultaneamente
+- Gráfico de área com evolução do saldo ao longo do tempo
+- Gráfico de pizza com distribuição por categoria e percentual de cada uma
+- Ambos os gráficos respondem aos filtros ativos em tempo real
+- Exportação do histórico filtrado em PDF
 - Responsividade total (Mobile First)
+- Menu hambúrguer em mobile com navegação completa
 
-## 🚀 Tecnologias Utilizadas
+---
+
+## 🚀 Tecnologias
 
 - React JS
-- TailwindCSS  
-- Recharts (para gráficos interativos)  
-- Firebase Firestore (para salvar transações e saldo)  
-- React Icons (ícones estilizados)
+- TailwindCSS
+- Firebase Firestore + Authentication
+- Recharts (gráficos interativos)
+- react-pdf (exportação em PDF)
+- react-number-format (formatação de moeda)
+- React Router DOM
+- shadcn/ui (componentes de interface)
+- React Icons
 
+---
 
-## 🧠 Como Funciona a Aplicação
+## 🧠 Como funciona
 
-- Ao abrir o app, os dados de saldo e transações são carregados do **Firestore** (caso estejam salvos).  
+- Ao acessar o app, o usuário faz login com Google. Os dados são carregados do **Firestore** e isolados por UID — nenhum usuário acessa os dados de outro.
+- Na **Página Inicial**, é possível adicionar transações informando valor, categoria e tipo (entrada ou saída). O saldo é recalculado automaticamente.
+- Na **Página de Transações**, o histórico completo é exibido com filtros por tipo, categoria e mês. Os gráficos refletem os filtros ativos em tempo real.
+- O botão **Gerar PDF** exporta apenas as transações visíveis com os filtros aplicados.
 
-- Na página **Home**, é possível adicionar ou remover valores de entrada e saída, além do tipo da transação — todos refletidos imediatamente no saldo.  
-
-- Na página de **Transações**, você vê a lista completa, além de totais de entrada, saída e saldo atual calculado.  
-
-- O gráfico visualiza a linha vermelha para saídas e verde para entradas, movimentando-se conforme inserções.  
-
+---
 
 ## 📁 Estrutura do Projeto
 
+```
 src/
-├── assets/ # Logos, imagens e fontes
-├── components/ # Componentes
-│ ├── ContentPages/ # Componentes das páginas principais
-│ ├── Graphics/ # Gráficos com Recharts
-│ ├── LoginContent.jsx # Conteúdo visual da tela de login
-│ ├── ModalLogin.jsx # Modal de login e cadastro
-│ └── NavBar.jsx # Barra de navegação
-├── contexts/ # Contextos globais (tema, auth, dados)
-├── documents/ # PDF e funcionalidades relacionadas à exportação
-├── hooks/ # Hooks personalizados
-├── pages/ # Renderização das páginas principais (Home, Login, Transactions)
-├── routes/ # Gerenciamento de rotas da aplicação
-├── services/ # Integração com Firebase e lógicas auxiliares
-├── App.jsx # Componente raiz da aplicação
-├── index.css # Estilização global
-└── main.jsx # Ponto de entrada do React
+├── components/
+│   ├── paginas/          # Conteúdo das páginas principais (Home, Transações)
+│   ├── graficos/         # Gráficos com Recharts (Área e Pizza)
+│   ├── inputs/           # Input de moeda formatado
+│   ├── LoginConteudo.jsx # Tela de login
+│   ├── ModalLogin.jsx    # Modal com Política de Privacidade e Termos de Uso
+│   └── NavBar.jsx        # Barra de navegação com foto de perfil
+├── contexts/             # Contexto de autenticação Google
+├── documentos/           # Geração e exportação de PDF
+├── hooks/                # LogicContext — lógica central da aplicação
+├── paginas/              # Páginas (Home, Login, Transações)
+├── rotas/                # Gerenciamento de rotas
+├── servicos/             # Integração com Firebase
+├── App.jsx
+├── index.css
+└── main.jsx
+```
 
+---
 
-## ✅ Desafios e Melhores Implementações
+## ✅ Destaques técnicos
 
-- Storages sincronizados entre **localStorage** e **Firestore** para persistência dos dados.  
-- Modal de criação estilizado e intuitivo  
-- Scroll customizado com tailwind que suporta longas listas de transação sem afetar o layout.
-- Exclusão dinâmica sem recarregar a página  
-- Gráfico que reflete entradas e saídas em tempo real  
-- Exportação das transações e saldo em PDF
+- Dados isolados por usuário via regras do Firestore
+- Contexto global separando autenticação (`AuthGoogleContext`) de lógica de negócio (`LogicContext`)
+- Filtros combinados aplicados em cadeia — categoria e período operam simultaneamente sobre a mesma lista
+- Datas salvas em ISO 8601 para comparação confiável entre períodos
+- Gráfico de pizza com agrupamento dinâmico por categoria via `reduce`
+- Gráfico de área com saldo acumulado calculado a partir das transações filtradas
+- Exportação PDF gerada sob demanda com conteúdo correspondente ao filtro ativo
 
-## 🛠️ Possíveis Melhorias Futuras para a plataforma
+---
 
-- Filtro por valor  
-- Versão PWA para funcionamento offline completo
-- Integrações com outras APIs financeiras  
+## 🛠️ Melhorias futuras
 
+- Filtro por intervalo de valor
+- Versão PWA para funcionamento offline
+- Metas de gastos por categoria
+- Integração com APIs de câmbio
 
-## 📷 Demonstração
-
-Acesse o projeto ao vivo aqui: https://finance-status.vercel.app/
-
-![alt text](image.png)
+---
 
 ## 🧑‍💻 Autor
 
-Desenvolvido por **@lucasx-dev**, Front-end Developer e entusiasta de UI/UX para apps funcionais e intuitivos.
+Desenvolvido por **Lucas Albuquerque** — [@lucasx-dev](https://github.com/lucasx-dev)
 
-Lucas Albuquerque 2025
+---
 
 ## 📄 Licença
 
-Projeto licenciado e protegido sob a **MIT License**.
+Projeto licenciado sob a **MIT License**.

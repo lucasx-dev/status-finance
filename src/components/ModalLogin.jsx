@@ -1,68 +1,140 @@
-import { useState } from "react";
-import { IoCloseCircleSharp } from "react-icons/io5";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export const ModalLogin = () => {
-  const [openModal, setOpenModal] = useState(null);
-  const toggleModal = (key) => {
-    setOpenModal(openModal === key ? null : key);
-  };
+	const contents = [
+		{
+			key: "Política de Privacidade",
+			text: `Levamos sua privacidade a sério.
 
-  const contents = {
-    privacy: {
-      text: `Levamos sua privacidade a sério.\n
-              1. Coletamos apenas os dados necessários para o funcionamento da aplicação: nome, e-mail e foto de perfil fornecidos pelo Google. \n
-              2. Seus dados são armazenados com segurança usando o serviço Firebase, com autenticação e banco de dados protegidos. \n
-              3. Não compartilhamos, vendemos ou divulgamos suas informações a terceiros. \n
-              4. As informações financeiras inseridas (saldo, despesas, lucros) são privadas e visíveis apenas para você. \n
-              5. Você pode solicitar a exclusão de seus dados a qualquer momento entrando em contato conosco. \n\n
-              O uso deste app implica na aceitação desta política.`,
-    },
-    terms: {
-      text: `Ao utilizar este aplicativo, você concorda com os seguintes termos: \n
-              1. Este aplicativo foi desenvolvido com o objetivo de ajudar usuários a organizar e visualizar suas finanças pessoais. \n
-              2. O acesso é feito exclusivamente por meio de login com Google, e os dados utilizados são nome, e-mail e foto de perfil. \n
-              3. Você é responsável pelas informações inseridas no aplicativo. Não nos responsabilizamos por dados incorretos ou incompletos. \n
-              4. É proibido o uso deste app para fins ilegais, ofensivos ou que prejudiquem terceiros. \n
-              5. Os dados armazenados são protegidos e usados apenas para fins internos do funcionamento do aplicativo. \n
-              Podemos atualizar os termos de uso a qualquer momento. O uso contínuo após mudanças significa sua aceitação.\n Se não concordar com algum termo, por favor, não utilize este aplicativo.
-            `,
-    },
-    about: {
-      text: `Este aplicativo foi criado para ajudar você a organizar suas finanças de forma simples, segura e visual. \n
-             Nosso objetivo é oferecer uma experiência intuitiva, onde você possa acompanhar seu saldo, lucros e despesas com poucos cliques —\n tudo salvo com segurança e visível apenas para você.
-             Desenvolvido para facilitar sua vida financeira. 
-`,
-    },
-  };
-  return (
-    <>
-      <footer className="flex flex-col h-20 w-screen justify-center underline items-center bg-blue-700 bottom-0 fixed z-40">
-        <p onClick={() => toggleModal("privacy")} className="cursor-pointer">
-          Política de Privacidade
-        </p>
-        <p onClick={() => toggleModal("terms")} className="cursor-pointer">
-          Termos de Uso
-        </p>
-        <p onClick={() => toggleModal("about")} className="cursor-pointer">
-          Sobre - Finance Status
-        </p>
-      </footer>
+1. Coletamos apenas os dados necessários para o funcionamento da aplicação: nome, e-mail e foto de perfil fornecidos pelo Google.
+2. Seus dados são armazenados com segurança usando o Firebase.
+3. Não compartilhamos, vendemos ou divulgamos suas informações a terceiros.
+4. As informações financeiras inseridas são privadas e visíveis apenas para você.
+5. Você pode solicitar a exclusão de seus dados a qualquer momento.
 
-      {openModal && (
-        <div className="fixed inset-0 pointer-events-none bg-transparent/90 flex  items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl pointer-events-auto overflow-y-auto shadow-xl w-[50vw] h-[50dvh] ">
-            <p className="text-gray-800 text-base whitespace-pre-line">
-              {contents[openModal].text}
-            </p>
-          </div>
-            <button
-              onClick={() => setOpenModal(null)}
-              className="absolute top-20 right-45 flex pointer-events-auto text-red-500 hover:text-red-900 text-2xl"
-            >
-              <IoCloseCircleSharp className="size-10" />
-            </button>
-        </div>
-      )}
-    </>
-  );
+O uso deste app implica na aceitação desta política.`,
+		},
+		{
+			key: "Termos de Uso",
+			text: `Ao utilizar este aplicativo, você concorda com os seguintes termos:
+
+1. O aplicativo foi desenvolvido para organização financeira pessoal.
+2. O acesso ocorre exclusivamente por login com Google.
+3. Você é responsável pelas informações inseridas.
+4. É proibido o uso do app para fins ilegais ou ofensivos.
+5. Os dados são protegidos e utilizados apenas internamente.
+
+Podemos atualizar estes termos a qualquer momento.`,
+		},
+		{
+			key: "Sobre - Finance Status",
+			text: `O Finance Status foi criado para ajudar você a organizar suas finanças de forma simples, segura e intuitiva.
+
+Nosso objetivo é permitir acompanhamento claro do seu saldo, ganhos e despesas — tudo salvo com segurança e visível apenas para você.`,
+		},
+	];
+
+	return (
+		<footer
+			className="
+				fixed bottom-0 left-0 z-40
+				w-full border-t border-slate-800
+				bg-slate-950/95 backdrop-blur-sm
+			"
+		>
+			<div
+				className="
+					mx-auto flex max-w-6xl
+					flex-col items-center
+					justify-between gap-3
+					px-5 py-4
+					md:flex-row
+				"
+			>
+				<div className="text-center md:text-left">
+					<h2 className="text-sm font-semibold text-slate-200">
+						Finance Status
+					</h2>
+
+					<p className="text-xs text-slate-500">
+						Segurança, privacidade e transparência.
+					</p>
+				</div>
+
+				<div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
+					{contents.map(({ key, text }) => (
+						<AlertDialog key={key}>
+							<AlertDialogTrigger
+								className="
+									rounded-lg px-3 py-2
+									text-sm text-slate-400
+									transition hover:bg-slate-800
+									hover:text-slate-200
+								"
+							>
+								{key}
+							</AlertDialogTrigger>
+
+							<AlertDialogContent
+								className="
+									max-w-lg rounded-3xl
+									border border-slate-800
+									bg-slate-900 text-white
+								"
+							>
+								<AlertDialogHeader>
+									<AlertDialogTitle className="text-lg font-semibold text-slate-100">
+										{key}
+									</AlertDialogTitle>
+
+									<AlertDialogDescription className="mt-3 max-h-[55vh] overflow-y-auto text-sm leading-7 text-slate-400">
+										{text
+											.split("\n")
+											.filter(Boolean)
+											.map((line, index) => (
+												<p key={index} className="mb-3">
+													{line}
+												</p>
+											))}
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+
+								<AlertDialogFooter className="mt-4">
+									<AlertDialogCancel
+										className="
+											border-slate-700
+											bg-slate-800
+											text-slate-300
+											hover:bg-slate-700
+										"
+									>
+										Fechar
+									</AlertDialogCancel>
+
+									<AlertDialogAction
+										className="
+											bg-blue-600
+											hover:bg-blue-500
+										"
+									>
+										Entendi
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
+					))}
+				</div>
+			</div>
+		</footer>
+	);
 };

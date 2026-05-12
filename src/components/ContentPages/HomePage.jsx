@@ -1,110 +1,188 @@
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useLogic } from "../../hooks/LogicContext";
-import { CurrencyInput } from "../Inputs/InputHomePage"
+import { CurrencyInput } from "../Inputs/InputHomePage";
 import { NumericFormat } from "react-number-format";
+import { Button } from "../ui/button";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "../ui/select";
+
 export const HomeContent = () => {
-  const {
-    newBalance,
-    isHidden,
-    setIsHidden,
-    description,
-    handleDescriptionChange,
-    optionValue,
-    setOptionValue,
-    inputValue,
-    outputValue,
-    error,
-    handleInputChange,
-    handleOutputChange,
-    setInputValue,
-    setOutputValue,
-    AddInput,
-    AddOutput,
-    transactions,
-    filterTransactions,
-    sortedTransactions,
-  } = useLogic();
-  return (
-    <div className="container mx-auto p-4 md:p-8 bg-gray-950 text-white min-h-screen">
-      <div className="flex flex-col justify-center md:block  flex-1">
-        <h1 className="text-3xl font-bold tracking-tight ">Página Inicial</h1>
-          <div className="w-[14rem] md:w-[23rem] border-2  rounded-3xl gap-40 flex p-6 mt-7 border-blue-700">
-            <h1 className="text-white text-xl  font-semibold">
-                  Saldo: R${" "}
-                  {isHidden ? "******" : (<NumericFormat
-                    value={newBalance}
-                    displayType="text"
-                    thousandSeparator="."
-                    decimalSeparator=","
-                    decimalScale={2}
-                    fixedDecimalScale
-                  />)}
-                </h1>
-                <button
-                  className="text-white fixed ml-40 md:ml-60"
-                  onClick={() => setIsHidden(!isHidden)}
-                >
-                {isHidden ? (
-                  <FaRegEye className="size-7" />
-                ) : (
-                  <FaRegEyeSlash className="size-7" />
-                )}
-                </button>
-          </div>
-              <div className="flex-col flex  md:w-[60dvh] mt-5">
-                <h1 className="text-xl font-semibold">Categoria</h1>
-                  <select
-                    className="text-white bg-gray-900/90 w-50 md:w-100 rounded-md outline-0 p-2"
-                    value={description}
-                    onChange={handleDescriptionChange}
-                  >
-                      <option value="Outros">Outros</option>
-                      <option value="Alimentação">Alimentação</option>
-                      <option value="Transporte">Transporte</option>
-                      <option value="Saúde">Saúde</option>
-                      <option value="Educação">Educação</option>
-                      <option value="Lazer">Lazer</option>
-                      <option value="Contas Fixas">Contas fixas</option>
-                  </select>
-              <h1 className="text-xl font-semibold ">Tipo</h1>
-                  <select
-                    className="text-white bg-gray-900/90 w-50 md:w-100 rounded-md outline-0 p-2"
-                    value={optionValue}
-                    onChange={(e) => {
-                      setOptionValue(e.target.value);
-                      if (e.target.value === "input") {
-                        setOutputValue("");
-                      } else {
-                        setInputValue("");
-                      }
-                    }}
-                  >
-                      <option value="input">Entrada</option>
-                      <option value="output">Saída</option>
-                  </select>
-              <CurrencyInput
-                  error={error}
-                  optionValue={optionValue}
-                  inputValue={inputValue}
-                  outputValue={outputValue}
-                  handleInputChange={handleInputChange}
-                  handleOutputChange={handleOutputChange}
-              ></CurrencyInput>
-                  {error && <h1 className="text-red-500">Digite um valor válido</h1>}
-            </div>
-                  <div className=" flex  ">
-                  <button
-                        className="rounded-md  bg-blue-700 text-white w-20 md:w-100 p-1 hover:scale-105 hover:bg-blue-800 "
-                          onClick={optionValue == "input" ? AddInput : AddOutput}
-                  >
-                          Adicionar
-                  </button>
-                </div>
-          <footer className="mt-10 text-[10px] text-white/20">
-          <p>Finance Status 2025 </p>
-          <p>Developed by Lucas Albuquerque</p>
-          </footer>
-        </div>
-    </div>
-  );
+	const {
+		newBalance,
+		isHidden,
+		setIsHidden,
+		description,
+		handleDescriptionChange,
+		optionValue,
+		setOptionValue,
+		inputValue,
+		outputValue,
+		error,
+		handleInputChange,
+		handleOutputChange,
+		setInputValue,
+		setOutputValue,
+		AddInput,
+		AddOutput,
+	} = useLogic();
+
+	return (
+		<div className="min-h-screen bg-[#0F172A] text-white">
+			<div className="mx-auto w-full max-w-2xl px-5 py-8">
+				<header className="mb-8">
+					<h1 className="text-2xl font-semibold tracking-tight">
+						Página Inicial
+					</h1>
+
+					<p className="mt-1 text-sm text-slate-400">
+						Gerencie suas movimentações financeiras.
+					</p>
+				</header>
+
+				<section className="rounded-3xl border border-slate-800 bg-slate-900 p-5">
+					<div className="flex items-start justify-between">
+						<div>
+							<p className="text-sm text-slate-400">Saldo disponível</p>
+
+							<h2 className="mt-2 text-3xl font-semibold tracking-tight">
+								R${" "}
+								{isHidden ? (
+									"••••••"
+								) : (
+									<NumericFormat
+										value={newBalance}
+										displayType="text"
+										thousandSeparator="."
+										decimalSeparator=","
+										decimalScale={2}
+										fixedDecimalScale
+									/>
+								)}
+							</h2>
+						</div>
+
+						<button
+							className="
+								flex h-10 w-10 items-center
+								justify-center rounded-xl
+								bg-slate-800 transition
+								hover:bg-slate-700
+							"
+							onClick={() => setIsHidden(!isHidden)}
+						>
+							{isHidden ? (
+								<FaRegEye className="text-slate-300" />
+							) : (
+								<FaRegEyeSlash className="text-slate-300" />
+							)}
+						</button>
+					</div>
+				</section>
+
+				<section className="mt-5 rounded-3xl border border-slate-800 bg-slate-900 p-5">
+					<div className="mb-5">
+						<h2 className="text-lg font-medium">Nova movimentação</h2>
+
+						<p className="text-sm text-slate-400">
+							Adicione uma entrada ou saída.
+						</p>
+					</div>
+
+					<div className="space-y-4">
+						<div>
+							<label className="mb-2 block text-sm text-slate-300">
+								Categoria
+							</label>
+
+							<select
+								className="
+									h-11 w-full rounded-xl
+									border border-slate-700
+									bg-slate-800 px-4
+									text-sm outline-none
+									transition
+									focus:border-blue-500
+								"
+								value={description}
+								onChange={handleDescriptionChange}
+							>
+								<option value="Outros">Outros</option>
+								<option value="Alimentação">Alimentação</option>
+								<option value="Transporte">Transporte</option>
+								<option value="Saúde">Saúde</option>
+								<option value="Educação">Educação</option>
+								<option value="Lazer">Lazer</option>
+								<option value="Contas Fixas">Contas Fixas</option>
+							</select>
+						</div>
+
+						<div>
+							<label className="mb-2 block text-sm text-slate-300">Tipo</label>
+
+							<Select
+								value={optionValue}
+								onValueChange={(value) => {
+									setOptionValue(value);
+
+									if (value === "input") {
+										setOutputValue("");
+									} else {
+										setInputValue("");
+									}
+								}}
+							>
+								<SelectTrigger className="h-11 rounded-xl border-slate-700 bg-slate-800">
+									<SelectValue placeholder="Selecione" />
+								</SelectTrigger>
+
+								<SelectContent>
+									<SelectItem value="input">Entrada</SelectItem>
+
+									<SelectItem value="output">Saída</SelectItem>
+								</SelectContent>
+							</Select>
+						</div>
+
+						<div>
+							<label className="mb-2 block text-sm text-slate-300">Valor</label>
+
+							<CurrencyInput
+								error={error}
+								optionValue={optionValue}
+								inputValue={inputValue}
+								outputValue={outputValue}
+								handleInputChange={handleInputChange}
+								handleOutputChange={handleOutputChange}
+							/>
+						</div>
+
+						{error && (
+							<p className="text-sm text-red-400">Digite um valor válido</p>
+						)}
+
+						<Button
+							className="
+								mt-2 h-11 w-full rounded-xl
+								bg-blue-600 text-sm
+								font-medium hover:bg-blue-500
+							"
+							onClick={optionValue === "input" ? AddInput : AddOutput}
+						>
+							Adicionar movimentação
+						</Button>
+					</div>
+				</section>
+
+				<footer className="mt-8 text-center text-xs text-slate-500">
+					<p>Finance Status © 2025</p>
+					<p>Desenvolvido por Lucas Albuquerque</p>
+				</footer>
+			</div>
+		</div>
+	);
 };
